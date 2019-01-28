@@ -9,6 +9,13 @@ Description:
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+
+//define variables 
+#define ID 300
+#define NUM 301
+#define BEGIN 400
+#define END 401 
 
 void lexanAnalyzer(){
     
@@ -22,32 +29,42 @@ void lexanAnalyzer(){
 
     }
 
-    while( (c = getc(fp) ) != EOF)
+    //count line number 
+    int count = 1;
+
+    while( (c = getc(fp)) != EOF)
     {
         //printf("%c", c);
+         if(c == '\n'){
+            count++;
+            printf("Line %d: \n ", count);
+         }
 
-        if(isCharNull(c))
+        if(isCharNull(c)) //if c is a space or tab
         {
             //printf("%c - this is a space\n", c);
             //do nothing
-        }
-
-        if(isCharDigit(c))
+        }else if (c == '\n') // if c is a new line, increase line number 
         {
-            
+            count ++;
+
+        }else if(isdigit(c)) //if c is a digit
+        {
+            printf("c is a digit: %c \n", c);
+
+        }else if(isalpha(c)) //if c is a letter 
+        {
+            printf("c is a letetr %c \n", c);
         }
 
-        
     }
-        
-     
+    //close file    
     fclose(fp);
-
 }
 
 bool isCharNull(char c){
 
-    if(c == ' ')
+    if(c == ' ' || c == '\t') //check if c is a space or tab
     {
         return true;
     }
@@ -55,22 +72,10 @@ bool isCharNull(char c){
     return false;
 }
 
-bool isCharDigit(char c){
-
-    int num[10] = {0,1,2,3,4,5,6,7,8,9};
-
-    for(int i = 0; i < sizeof(num); i++)
-    {
-        if(c == num[i])
-        {
-            return true;
-        }
-    }
-
-    return false;
+void symbolTable()
+{
 
 }
-
 
 
 

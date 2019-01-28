@@ -15,12 +15,6 @@ void lexanAnalyzer();
 
 bool isCharNull(char c);
 
-bool isCharDigit(char c);
-
-bool isCharLetter(char c);
-
-
-
-
+void symbolTable();
 
 #endif
