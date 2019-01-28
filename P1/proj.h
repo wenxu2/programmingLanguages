@@ -2,7 +2,7 @@
 File name: proj.h
 Author: Wenwen Xu
 Project: Project 1
-Description: 
+Description: headfile to hold all function to be used in this project
 */
 
 #include <stdbool.h>

@@ -2,8 +2,9 @@
 File name: proj.c
 Author: Wenwen Xu
 Project: Project 1
-Description: 
+Description: this file contains logic for this project 
 */
+
 #include <stdio.h>
 #include "proj.h"
 #include <stdbool.h>
