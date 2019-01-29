@@ -18,6 +18,33 @@ Description: this file contains logic for this project
 #define BEGIN 400
 #define END 401 
 
+
+struct SYMBOLTABLE{
+    int position;
+    char *value;
+    int type;
+};
+
+int hashCode(int key, int size)
+{
+    return key%size;
+}
+
+int search(int key)
+{
+    int index = hashCode();
+}
+
+SymbolTable createTable(int position, char *value, int type)
+{
+    SymbolTable symbolTable = malloc(sizeof(*symbolTable));
+    symbolTable->position = position;
+    symbolTable->value = value;
+    symbolTable->type = type;
+
+    return symbolTable;
+}
+
 void lexanAnalyzer(){
     
     FILE *fp;
@@ -71,11 +98,6 @@ bool isCharNull(char c){
     }
 
     return false;
-}
-
-void symbolTable()
-{
-
 }
 
 
