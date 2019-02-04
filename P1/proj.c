@@ -19,33 +19,35 @@ Description: this file contains logic for this project
 #define END 401 
 
 
-struct SYMBOLTABLE{
-    int position;
+int lookahead;
+
+struct TABLE{
     char *value;
-    int type;
+    int key;
+    table next; 
 };
 
-int hashCode(int key, int size)
-{
-    return key%size;
+table createTable(char *value, int key, table next){
+
+    table newTable = malloc(sizeof *newTable);
+    newTable->value = value;
+    newTable->key = key;
+    newTable->next = next;
+
+    return newTable;
 }
 
-int search(int key)
-{
-    int index = hashCode();
+
+/*
+* free the table at the end 
+*/
+void freeTable(table currentTable){
+    free(currentTable);
 }
 
-SymbolTable createTable(int position, char *value, int type)
-{
-    SymbolTable symbolTable = malloc(sizeof(*symbolTable));
-    symbolTable->position = position;
-    symbolTable->value = value;
-    symbolTable->type = type;
 
-    return symbolTable;
-}
 
-void lexanAnalyzer(){
+int lexanAnalyzer(){
     
     FILE *fp;
     char c;
@@ -80,15 +82,32 @@ void lexanAnalyzer(){
         {
             printf("c is a digit: %c \n", c);
 
+            /*
+            * get the number into numLexeme
+            */
+
+            //return NUM;
+
         }else if(isalpha(c)) //if c is a letter 
         {
             printf("c is a letetr %c \n", c);
+
+            //int pos = lookup(c);
+            
+
+            //return ID;
         }
 
     }
     //close file    
     fclose(fp);
+
+    return 0;
 }
+
+
+//int lookup(char *value);
+
 
 bool isCharNull(char c){
 
@@ -100,5 +119,35 @@ bool isCharNull(char c){
     return false;
 }
 
+
+/*
+*recursive descent parser
+*/
+
+void match(int t)
+{
+    if(lookahead == t)
+    {
+        lookahead = lexanAnalyzer();
+    }else{
+        error("Syntax error");
+    }
+}
+
+void factor(){
+
+    if(lookahead == ID)
+    {
+        match(ID);
+    }else if(lookahead == NUM)
+    {
+        match(NUM);
+    }else if (lookahead == '(')
+    {
+        match('(');
+        //expression
+        match(')');
+    }
+}
 
 

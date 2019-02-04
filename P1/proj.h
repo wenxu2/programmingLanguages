@@ -9,16 +9,33 @@ Description: headfile to hold all function to be used in this project
 #ifndef PROJ_H
 #define PROJ_H
 
-typedef struct SYMBOLTABLE *SymbolTable; 
+typedef struct TABLE *table;
 
-int hashCode(int key, int size);
-
-SymbolTable createTable(int position, char *value, int type);
+table createTable(char *value, int key,table next);
 
 void readFile();
 
-void lexanAnalyzer();
+int lexanAnalyzer();
+
+int hash(char *value);
 
 bool isCharNull(char c);
+
+void freeTable(table currentTable);
+
+int lookup(char *value);
+
+
+//recursive descent parser
+void match(int t);
+
+void factor();
+
+void term();
+
+void expression();
+
+void assignStmt();
+
 
 #endif
