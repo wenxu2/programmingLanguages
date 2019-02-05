@@ -9,10 +9,27 @@ Description: headfile to hold all function to be used in this project
 #ifndef PROJ_H
 #define PROJ_H
 
-typedef struct TABLE *table;
+//create a row
 
-table createTable(char *value, int key,table next);
+typedef struct ROW *Row;
+Row createRow(int pos, char *value, int type, Row next);
 
+void setNextRow(Row currentRow, Row next);
+
+Row getNextRow(Row currentRow);
+
+//create a table
+typedef struct TABLE *Table;
+Table createTable(Row head, Row tail, int size);
+
+//inseart value
+void insertRow(Table currentTable, int pos, char *value, int type);
+
+void displayTable(Table currentTable);
+
+bool isRowExist(Table currentTable, Row newRow);
+
+//lexanAnalyzer 
 void readFile();
 
 int lexanAnalyzer();
@@ -21,10 +38,7 @@ int hash(char *value);
 
 bool isCharNull(char c);
 
-void freeTable(table currentTable);
-
 int lookup(char *value);
-
 
 //recursive descent parser
 void match(int t);
@@ -36,6 +50,8 @@ void term();
 void expression();
 
 void assignStmt();
+
+char* getWord(char c, FILE *fp, char* word);
 
 
 #endif
