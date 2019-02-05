@@ -10,7 +10,6 @@ Description: headfile to hold all function to be used in this project
 #define PROJ_H
 
 //create a row
-
 typedef struct ROW *Row;
 Row createRow(int pos, char *value, int type, Row next);
 
@@ -53,5 +52,6 @@ void assignStmt();
 
 char* getWord(char c, FILE *fp, char* word);
 
+void getComment(char c, FILE *fp, char *line);
 
 #endif

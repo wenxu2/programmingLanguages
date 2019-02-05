@@ -18,7 +18,6 @@ Description: this file contains logic for this project
 #define BEGIN 400
 #define END 401 
 
-
 int lookahead;
 
 struct ROW{
@@ -100,18 +99,16 @@ void displayTable(Table currentTable){
 char* getWord(char c, FILE *fp, char *word)
 {
 
-    //char *word;
-    //word = malloc(5);
     int i = 0;
-     while(isalpha(c))
-            {
-                word[i++] = c;
-                c = fgetc(fp);
-            }
+    while(isalpha(c))
+    {
+        word[i++] = c;
+        c = fgetc(fp);
+    }
 
-            word[i] = '\0';
-            //printf("%s\n",word);
-            ungetc(c,fp);
+    word[i] = '\0';
+    //printf("%s\n",word);
+    ungetc(c,fp);
 
     return word;
 }
@@ -125,16 +122,14 @@ bool isRowExist(Table currentTable, Row newRow)
    {
        if(currentRow->value == newRow->value)
        {
-           //printf("exist!\n");
-           return true;
+           return true; //value already exist in the table
        }
 
-        currentRow = getNextRow(currentRow);
+       currentRow = getNextRow(currentRow);
        
    }
 
-    //printf("does not exist!\n");
-    return false;
+    return false; //value does not exist 
 }
 
 int lexanAnalyzer(){
@@ -146,7 +141,6 @@ int lexanAnalyzer(){
     //create table
     Table symboltable = createTable(NULL, NULL, 0);
 
-
     if(fp == NULL){
 
         printf("ERROR!\n");
@@ -154,21 +148,22 @@ int lexanAnalyzer(){
     }
 
     //count line number 
-    int count = 1;
+    int count = 0;
     int pos = 0;
-
 
     while( (c = getc(fp)) != EOF)
     {
-        //printf("%c", c);
-         if(c == '\n'){
-            count++;
-            //printf("Line %d: \n ", count);
-         }
-
-        if(isCharNull(c)) //if c is a space or tab
+        if(c == '~')
         {
-            //printf("%c - this is a space\n", c);
+            char *line = malloc(10000);
+            getComment(c,fp,line);
+            count++;
+        }
+        else if(c == '\n'){
+            count++;
+        }
+        else if(isCharNull(c)) //if c is a space or tab
+        {
             //do nothing
         }else if (c == '\n') // if c is a new line, increase line number 
         {
@@ -176,8 +171,6 @@ int lexanAnalyzer(){
 
         }else if(isdigit(c)) //if c is a digit
         {
-           // printf("c is a digit: %c \n", c);
-
             /*
             * get the number into numLexeme
             */
@@ -186,12 +179,9 @@ int lexanAnalyzer(){
 
         }else if(isalpha(c)) //if c is a letter 
         {
-            //printf("c is a letetr %c \n", c);
             //get identiferier into value
             char* word = malloc(50);
             getWord(c,fp,word);
-
-            //printf("%s\n", word);
 
             Row newRow = createRow(pos, word, ID, NULL);
 
@@ -200,15 +190,9 @@ int lexanAnalyzer(){
                 insertRow(symboltable, pos, word, ID);
                 pos++;
             }
-
-           
-            
-        }else{
-        
-        //return c;
+        }
      }
-
-    }
+     
     //close file    
     fclose(fp);
     
@@ -218,7 +202,20 @@ int lexanAnalyzer(){
 }
 
 
-//int lookup(char *value);
+void getComment(char c, FILE *fp, char *line)
+{
+
+    int i = 0;
+    while(c != '\n')
+    {
+        line[i++] = c;
+        c = fgetc(fp);
+    }
+
+    line[i] = '\0';
+    printf("%s\n",line);
+    ungetc(c,fp);    
+}
 
 
 bool isCharNull(char c){
