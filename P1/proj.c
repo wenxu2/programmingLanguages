@@ -158,6 +158,10 @@ int lexanAnalyzer(){
             char *line = malloc(10000);
             getComment(c,fp,line);
             count++;
+
+            //countsize(c, '\n', fp);
+
+            //printf("The size of the array: %lu\n", sizeof(line));
         }
         else if(c == '\n'){
             count++;
@@ -216,6 +220,23 @@ void getComment(char c, FILE *fp, char *line)
     printf("%s\n",line);
     ungetc(c,fp);    
 }
+
+/*
+int countsize(char c, char c_symbol, FILE *fp)
+{
+    int size = 0;
+
+    while(c != c_symbol)
+    {
+        size++;
+        c = fgetc(fp);
+
+    }
+
+    printf("The size of this array is : %d\n", size);
+    return size;
+}*/
+
 
 
 bool isCharNull(char c){

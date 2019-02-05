@@ -54,4 +54,6 @@ char* getWord(char c, FILE *fp, char* word);
 
 void getComment(char c, FILE *fp, char *line);
 
+//int countsize(char c, char c_symbol, FILE *fp);
+
 #endif
