@@ -26,8 +26,8 @@ void expression();
 void assignStmt();
 
 //build string and comment array
-char* getWord(char c, FILE *fp, char* word);
+char* getWord(char c, char* word);
 
-void getComment(char c, FILE *fp, char *line);
+void getComment(char c, char *line);
 
 #endif

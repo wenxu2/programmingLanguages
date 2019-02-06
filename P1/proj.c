@@ -20,27 +20,28 @@ Description: this file contains logic for this project
 #define END 401 
 
 int lookahead;
+FILE *fp;
+int pos = 0;
+int count = 0;
+Table symboltable;
+Row newRow;
+int id;
 
 
 int lexanAnalyzer(){
     
     char c;
-    
-    //create table
-    Table symboltable = createTable(NULL, NULL, 0);
-
-    //count line number 
-    int count = 0;
-    int pos = 0;
 
     while(true)
     {
-        c = getchar();
-        
+    
+        c = fgetc(fp);
+        //printf("C now is : %c\n", c);
+    
         if(c == '~')
         {
             char *line = malloc(10000);
-            //getComment(c,fp,line);
+            getComment(c,line);
             count++;
         }
         else if(c == '\n'){
@@ -49,7 +50,7 @@ int lexanAnalyzer(){
         else if(isCharNull(c)) //if c is a space or tab
         {
             //do nothing
-            
+
         }else if (c == '\n') // if c is a new line, increase line number 
         {
             count ++;
@@ -59,20 +60,42 @@ int lexanAnalyzer(){
             /*
             * get the number into numLexeme
             */
+            lookahead = NUM;
             return NUM;
 
         }else if(isalpha(c)) //if c is a letter 
         {
             //get identiferier into value
             char* word = malloc(50);
-            //getWord(c,fp,word);
+            getWord(c,word);
 
-            Row newRow = createRow(pos, word, ID, NULL);
+            printf("Word: %s\n", word);
+           
+            if(strcmp(word,"begin"))
+            {
+                id = BEGIN;
+                printf("BEGIN %d\n", BEGIN);
+
+            }else if(strcmp(word,"end"))
+            {
+                id = END;
+
+            }else{
+                id = ID;
+            }
+
+            printf("%d\n", id);
+
+            newRow = createRow(pos,word,id,NULL);
 
             if(!isRowExist(symboltable, newRow))
             {
-                insertRow(symboltable, pos, word, ID);
+                
+                insertRow(symboltable, pos, word, id);
                 pos++;
+                
+               
+
             }else if(strcmp(word,"begin"))
             {
                 printf("begin\n");
@@ -83,6 +106,19 @@ int lexanAnalyzer(){
                 printf("end\n");
                 return END;
             }
+
+            lookahead = ID;
+            return ID;
+
+        }else if(c == EOF)
+        {
+            fclose(fp);
+            return 0;
+
+        }else{
+
+            
+            return c;
         }
      }
 
@@ -92,7 +128,7 @@ int lexanAnalyzer(){
 /*
 * build string array
 */
-char* getWord(char c, FILE *fp, char *word)
+char* getWord(char c, char *word)
 {
 
     int i = 0;
@@ -109,7 +145,7 @@ char* getWord(char c, FILE *fp, char *word)
     return word;
 }
 
-void getComment(char c, FILE *fp, char *line)
+void getComment(char c, char *line)
 {
 
     int i = 0;
@@ -150,6 +186,13 @@ void match(int t)
 
 void factor(){
 
+    symboltable = createTable(NULL, NULL, 0);
+    fp = fopen("test.txt", "r");
+    lexanAnalyzer();
+    displayTable(symboltable);
+    
+    //printf("\n%d Lookahead\n", lookahead);
+   
     if(lookahead == ID)
     {
         match(ID);
@@ -157,13 +200,15 @@ void factor(){
     }else if(lookahead == NUM)
     {
         match(NUM);
+
     }else if (lookahead == '(')
     {
         match('(');
-        //expression
+        expression();
         match(')');
     }
     else{
+
         printf("Error Message\n");
     }
 }

@@ -15,21 +15,7 @@ int main()
 {
 
     //lexanAnalyzer();
-    //factor();
-
-    FILE *fp;
-    char c = 'A';
-    fp = fopen("test.txt", "r");
-
-    while(true)
-    {
-        printf("test\n");
-
-        return c;
-    }
-
-
-
+    factor();
 
     return 0;
 }
