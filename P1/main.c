@@ -9,11 +9,27 @@ Description: main file to run the project
 #include <stdlib.h>
 #include "proj.h"
 #include <ctype.h>
+#include "symbol.h"
 
 int main()
 {
 
-    lexanAnalyzer();
+    //lexanAnalyzer();
+    //factor();
+
+    FILE *fp;
+    char c = 'A';
+    fp = fopen("test.txt", "r");
+
+    while(true)
+    {
+        printf("test\n");
+
+        return c;
+    }
+
+
+
 
     return 0;
 }

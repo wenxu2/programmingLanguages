@@ -11,6 +11,7 @@ Description: this file contains logic for this project
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "symbol.h"
 
 //define variables 
 #define ID 300
@@ -20,82 +21,77 @@ Description: this file contains logic for this project
 
 int lookahead;
 
-struct ROW{
 
-    int pos;
-    char *value;
-    int type;
-    Row next;
-};
-
-Row createRow(int pos, char *value, int type, Row next){
-
-    Row newRow = malloc(sizeof *newRow);
-    newRow->pos = pos;
-    newRow->value = value;
-    newRow->type = type;
-    newRow->next = next;
-
-    return newRow;
-}
-
-struct TABLE{
+int lexanAnalyzer(){
     
-    Row head;
-    Row tail;
-    int size;
-};
+    char c;
+    
+    //create table
+    Table symboltable = createTable(NULL, NULL, 0);
 
-Row getNextRow(Row currentRow){
-    return currentRow->next;
-}
+    //count line number 
+    int count = 0;
+    int pos = 0;
 
-void setNextRow(Row currentRow, Row next)
-{
-    currentRow->next = next;
-}
-
-Table createTable(Row head, Row tail, int size){
-
-    Table newTable = malloc(sizeof *newTable);
-    newTable->head = head;
-    newTable->tail = tail;
-    newTable->size = size;
-
-    return newTable;
-
-}
-
-void insertRow(Table currentTable, int pos, char *value, int type)
-{
-    Row newRow = createRow(pos, value, type, NULL);
-    currentTable->size += 1;
-
-    if(currentTable->tail == NULL)
+    while(true)
     {
-        currentTable->head = newRow;
-        currentTable->tail = newRow;
-
-        return;
-    }
-    
-    setNextRow(currentTable->tail, newRow);
-    currentTable->tail = newRow;
-}
-
-void displayTable(Table currentTable){
-
-    Row currentRow = currentTable->head;
-    
-    while(currentRow != NULL)
-    {
-        printf("%d %s % d \n", currentRow->pos, currentRow->value, currentRow->type);
-        currentRow = getNextRow(currentRow);
+        c = getchar();
         
-    }
+        if(c == '~')
+        {
+            char *line = malloc(10000);
+            //getComment(c,fp,line);
+            count++;
+        }
+        else if(c == '\n'){
+            count++;
+        }
+        else if(isCharNull(c)) //if c is a space or tab
+        {
+            //do nothing
+            
+        }else if (c == '\n') // if c is a new line, increase line number 
+        {
+            count ++;
 
+        }else if(isdigit(c)) //if c is a digit
+        {
+            /*
+            * get the number into numLexeme
+            */
+            return NUM;
+
+        }else if(isalpha(c)) //if c is a letter 
+        {
+            //get identiferier into value
+            char* word = malloc(50);
+            //getWord(c,fp,word);
+
+            Row newRow = createRow(pos, word, ID, NULL);
+
+            if(!isRowExist(symboltable, newRow))
+            {
+                insertRow(symboltable, pos, word, ID);
+                pos++;
+            }else if(strcmp(word,"begin"))
+            {
+                printf("begin\n");
+                return BEGIN;
+
+            }else if(strcmp(word,"end"))
+            {
+                printf("end\n");
+                return END;
+            }
+        }
+     }
+
+    return 0;
 }
 
+/*
+* build string array
+*/
 char* getWord(char c, FILE *fp, char *word)
 {
 
@@ -113,99 +109,6 @@ char* getWord(char c, FILE *fp, char *word)
     return word;
 }
 
-
-bool isRowExist(Table currentTable, Row newRow)
-{
-   Row currentRow = currentTable->head;
-
-   while(currentRow != NULL)
-   {
-       if(currentRow->value == newRow->value)
-       {
-           return true; //value already exist in the table
-       }
-
-       currentRow = getNextRow(currentRow);
-       
-   }
-
-    return false; //value does not exist 
-}
-
-int lexanAnalyzer(){
-    
-    FILE *fp;
-    char c;
-    fp = fopen("test.txt", "r");
-
-    //create table
-    Table symboltable = createTable(NULL, NULL, 0);
-
-    if(fp == NULL){
-
-        printf("ERROR!\n");
-
-    }
-
-    //count line number 
-    int count = 0;
-    int pos = 0;
-
-    while( (c = getc(fp)) != EOF)
-    {
-        if(c == '~')
-        {
-            char *line = malloc(10000);
-            getComment(c,fp,line);
-            count++;
-
-            //countsize(c, '\n', fp);
-
-            //printf("The size of the array: %lu\n", sizeof(line));
-        }
-        else if(c == '\n'){
-            count++;
-        }
-        else if(isCharNull(c)) //if c is a space or tab
-        {
-            //do nothing
-        }else if (c == '\n') // if c is a new line, increase line number 
-        {
-            count ++;
-
-        }else if(isdigit(c)) //if c is a digit
-        {
-            /*
-            * get the number into numLexeme
-            */
-
-            //return NUM;
-
-        }else if(isalpha(c)) //if c is a letter 
-        {
-            //get identiferier into value
-            char* word = malloc(50);
-            getWord(c,fp,word);
-
-            Row newRow = createRow(pos, word, ID, NULL);
-
-            if(!isRowExist(symboltable, newRow))
-            {
-                insertRow(symboltable, pos, word, ID);
-                pos++;
-            }
-        }
-     }
-     
-    //close file    
-    fclose(fp);
-    
-    displayTable(symboltable);
-
-    return 0;
-}
-
-
 void getComment(char c, FILE *fp, char *line)
 {
 
@@ -221,24 +124,6 @@ void getComment(char c, FILE *fp, char *line)
     ungetc(c,fp);    
 }
 
-/*
-int countsize(char c, char c_symbol, FILE *fp)
-{
-    int size = 0;
-
-    while(c != c_symbol)
-    {
-        size++;
-        c = fgetc(fp);
-
-    }
-
-    printf("The size of this array is : %d\n", size);
-    return size;
-}*/
-
-
-
 bool isCharNull(char c){
 
     if(c == ' ' || c == '\t') //check if c is a space or tab
@@ -249,16 +134,15 @@ bool isCharNull(char c){
     return false;
 }
 
-
 /*
 *recursive descent parser
 */
-
 void match(int t)
 {
     if(lookahead == t)
     {
         lookahead = lexanAnalyzer();
+
     }else{
         printf("syntax error\n");//need add line number 
     }
@@ -269,6 +153,7 @@ void factor(){
     if(lookahead == ID)
     {
         match(ID);
+
     }else if(lookahead == NUM)
     {
         match(NUM);
@@ -279,7 +164,7 @@ void factor(){
         match(')');
     }
     else{
-        printf("Error Message");
+        printf("Error Message\n");
     }
 }
 
@@ -291,5 +176,30 @@ void term(){
         factor();
     }
 }
+
+void expression(){
+    term();
+    while(lookahead == '+' || lookahead == '-')
+    {
+        match(lookahead);
+        term();
+    }
+}
+
+void assignStmt()
+{
+    match(ID);
+
+    if(lookahead != '=')
+    {
+        printf("ERROR");
+    }else{
+        match(lookahead);
+        expression();
+        match(';');
+    }
+}
+
+
 
 
