@@ -38,8 +38,8 @@ void runProgram()
     symboltable = createTable(NULL, NULL, 0);
     fp = fopen("test.txt", "r");
 
-    insertRow(symboltable, pos,"begin", BEGIN);
-    pos++;
+    //insertRow(symboltable, pos,"begin", BEGIN);
+    //pos++;
     lookahead = ID;
 
     while(fp != NULL)
@@ -91,11 +91,12 @@ int lexanAnalyzer(){
             //get identiferier into value
             word = malloc(50);
             getWord(c,word);
+
+            //printf("Word: %s\n", word);
            
             if(strcmp(word,"begin") == 0)
             {
                 id = BEGIN;
-                lexanAnalyzer();
 
             }else if(strcmp(word,"end") == 0)
             {
