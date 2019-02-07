@@ -10,8 +10,6 @@ Description: headfile to hold all function to be used in this project
 #define PROJ_H
 
 //lexanAnalyzer 
-bool isCharNull(char c);
-
 int lexanAnalyzer();
 
 //recursive descent parser
@@ -26,8 +24,12 @@ void expression();
 void assignStmt();
 
 //build string and comment array
-char* getWord(char c, char* word);
+char *getWord(char c, char *word);
 
 void getComment(char c, char *line);
+
+void getNumber(char c, char *number);
+
+void runProgram();
 
 #endif

@@ -19,132 +19,178 @@ Description: this file contains logic for this project
 #define BEGIN 400
 #define END 401 
 
-int lookahead;
+/*
+* declear values
+*/
+int lookahead = ID;
 FILE *fp;
 int pos = 0;
-int count = 0;
+int lineNumber = 0;
 Table symboltable;
 Row newRow;
 int id;
+char c;
+char* word;
+char *number;
+
+void runProgram()
+{
+    symboltable = createTable(NULL, NULL, 0);
+    fp = fopen("test.txt", "r");
+
+    displayTable(symboltable);
+
+    while(fp != NULL)
+    {
+        assignStmt();
+    }
+
+    fclose(fp);
+
+}
 
 
 int lexanAnalyzer(){
-    
-    char c;
 
     while(true)
     {
-    
         c = fgetc(fp);
-        //printf("C now is : %c\n", c);
     
         if(c == '~')
         {
             char *line = malloc(10000);
             getComment(c,line);
-            count++;
+            lineNumber++;
+            free(line);
         }
         else if(c == '\n'){
-            count++;
+            lineNumber++;
         }
-        else if(isCharNull(c)) //if c is a space or tab
+        else if(c == ' ' || c == '\t') //if c is a space or tab
         {
-            //do nothing
+            /*
+            * do nothing
+            */
 
-        }else if (c == '\n') // if c is a new line, increase line number 
+        }else if (c == '\n') //if c is a new line, increase line number 
         {
-            count ++;
+            lineNumber++;
 
         }else if(isdigit(c)) //if c is a digit
         {
             /*
             * get the number into numLexeme
             */
-            lookahead = NUM;
+            number = malloc(50);
+            getNumber(c,number);
+           
+            //lookahead = NUM;
+            free(number);
+
             return NUM;
 
         }else if(isalpha(c)) //if c is a letter 
         {
             //get identiferier into value
-            char* word = malloc(50);
+            word = malloc(50);
             getWord(c,word);
-
-            printf("Word: %s\n", word);
            
-            if(strcmp(word,"begin"))
+            if(strcmp(word,"begin") == 0)
             {
-                id = BEGIN;
-                printf("BEGIN %d\n", BEGIN);
 
-            }else if(strcmp(word,"end"))
+                id = BEGIN;
+                lookahead = ID;
+
+            }else if(strcmp(word,"end") == 0)
             {
                 id = END;
-
+                
             }else{
+            
                 id = ID;
             }
 
-            printf("%d\n", id);
-
+            //create the row 
             newRow = createRow(pos,word,id,NULL);
 
+            //check if the row exist 
             if(!isRowExist(symboltable, newRow))
             {
-                
                 insertRow(symboltable, pos, word, id);
                 pos++;
-                
-               
+                freeRow(newRow);//free the row after insert 
 
             }else if(strcmp(word,"begin"))
             {
-                printf("begin\n");
+                //lookahead = ID;
                 return BEGIN;
 
             }else if(strcmp(word,"end"))
             {
-                printf("end\n");
                 return END;
+                exit(0);
             }
 
-            lookahead = ID;
+            //lookahead = ID;
+            free(word);
             return ID;
 
-        }else if(c == EOF)
+        }else if(c == EOF)//end of the file
         {
-            fclose(fp);
-            return 0;
+            displayTable(symboltable);
+            exit(0);//exit the program 
 
         }else{
-
-            
+            //lookahead = c;
             return c;
         }
      }
 
-    return 0;
 }
 
 /*
 * build string array
 */
-char* getWord(char c, char *word)
+char *getWord(char c, char *word)
 {
-
     int i = 0;
-    while(isalpha(c))
+    while(isalpha(c) || c == '_' || isalnum(c))
     {
         word[i++] = c;
         c = fgetc(fp);
     }
 
-    word[i] = '\0';
-    //printf("%s\n",word);
-    ungetc(c,fp);
+    if(c != '=' && c != '(' && c != ')' && c != '-' && c!= '*' && c!= '/' & c!= '+' && (!isalpha(c)) && (!isalnum(c)) && c != '\n' && c != ' ' && c != '\t')
+    {
+        printf("Syntax Error: Invalided Identifer '%s' in line %d!\n", word,lineNumber);
+        exit(0);
+    }
 
+    word[i] = '\0';
+    ungetc(c,fp);
     return word;
 }
 
+/*
+* build number array
+*/
+void getNumber(char c, char *number)
+{
+    int i = 0;
+    while(isnumber(c) || c == '.')
+    {
+        number[i++] = c;
+        c = fgetc(fp);
+    }
+
+    number[i] = '\0';
+    ungetc(c,fp);
+    
+}
+
+/*
+* build comment array
+*/
 void getComment(char c, char *line)
 {
 
@@ -156,18 +202,8 @@ void getComment(char c, char *line)
     }
 
     line[i] = '\0';
-    printf("%s\n",line);
     ungetc(c,fp);    
-}
-
-bool isCharNull(char c){
-
-    if(c == ' ' || c == '\t') //check if c is a space or tab
-    {
-        return true;
-    }
-
-    return false;
+    //printf("%s\n",line);
 }
 
 /*
@@ -180,19 +216,13 @@ void match(int t)
         lookahead = lexanAnalyzer();
 
     }else{
-        printf("syntax error\n");//need add line number 
+        printf("Syntax Error: check line %d.\n",lineNumber);//need add line number 
+        exit(0);
     }
 }
 
 void factor(){
 
-    symboltable = createTable(NULL, NULL, 0);
-    fp = fopen("test.txt", "r");
-    lexanAnalyzer();
-    displayTable(symboltable);
-    
-    //printf("\n%d Lookahead\n", lookahead);
-   
     if(lookahead == ID)
     {
         match(ID);
@@ -206,14 +236,16 @@ void factor(){
         match('(');
         expression();
         match(')');
-    }
-    else{
 
-        printf("Error Message\n");
+    }else{
+        printf("Syntax Error: check line %d.\n",lineNumber);
+        exit(0);
     }
+
 }
 
 void term(){
+
     factor();
     while(lookahead == '*' || lookahead == '/')
     {
@@ -235,15 +267,18 @@ void assignStmt()
 {
     match(ID);
 
-    if(lookahead != '=')
+    if(lookahead == '=' )
     {
-        printf("ERROR");
-    }else{
         match(lookahead);
         expression();
         match(';');
+
+    }else if (lookahead != '='){
+        printf("Syntax Error: missing '=' in line %d.\n", lineNumber);
+        exit(0);
     }
 }
+
 
 
 

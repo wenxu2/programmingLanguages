@@ -98,3 +98,9 @@ bool isRowExist(Table currentTable, Row newRow)
 
     return false; //value does not exist 
 }
+
+//free the row 
+void freeRow(Row currentROw)
+{
+    free(currentROw);
+}

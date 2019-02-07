@@ -22,4 +22,7 @@ void displayTable(Table currentTable);
 
 bool isRowExist(Table currentTable, Row newRow);
 
+//free the row
+void freeRow(Row currentRow);
+
 #endif

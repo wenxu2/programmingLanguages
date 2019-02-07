@@ -13,9 +13,6 @@ Description: main file to run the project
 
 int main()
 {
-
-    //lexanAnalyzer();
-    factor();
-
+    runProgram();//run the program 
     return 0;
 }
