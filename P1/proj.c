@@ -38,7 +38,10 @@ void runProgram()
     symboltable = createTable(NULL, NULL, 0);
     fp = fopen("test.txt", "r");
 
-    displayTable(symboltable);
+    insertRow(symboltable, pos,"begin", BEGIN);
+    pos++;
+
+    //displayTable(symboltable);
 
     while(fp != NULL)
     {
@@ -71,7 +74,6 @@ int lexanAnalyzer(){
             /*
             * do nothing
             */
-
         }else if (c == '\n') //if c is a new line, increase line number 
         {
             lineNumber++;
@@ -83,10 +85,7 @@ int lexanAnalyzer(){
             */
             number = malloc(50);
             getNumber(c,number);
-           
-            //lookahead = NUM;
             free(number);
-
             return NUM;
 
         }else if(isalpha(c)) //if c is a letter 
@@ -97,9 +96,7 @@ int lexanAnalyzer(){
            
             if(strcmp(word,"begin") == 0)
             {
-
                 id = BEGIN;
-                lookahead = ID;
 
             }else if(strcmp(word,"end") == 0)
             {
@@ -116,6 +113,7 @@ int lexanAnalyzer(){
             //check if the row exist 
             if(!isRowExist(symboltable, newRow))
             {
+                printf("Row does not exist\n");
                 insertRow(symboltable, pos, word, id);
                 pos++;
                 freeRow(newRow);//free the row after insert 
@@ -214,9 +212,10 @@ void match(int t)
     if(lookahead == t)
     {
         lookahead = lexanAnalyzer();
+        displayTable(symboltable);
 
     }else{
-        printf("Syntax Error: check line %d.\n",lineNumber);//need add line number 
+        printf("match - Syntax Error: check line %d.\n",lineNumber);//need add line number 
         exit(0);
     }
 }
@@ -238,7 +237,7 @@ void factor(){
         match(')');
 
     }else{
-        printf("Syntax Error: check line %d.\n",lineNumber);
+        printf("factor - Syntax Error: check line %d.\n",lineNumber);
         exit(0);
     }
 
@@ -272,11 +271,11 @@ void assignStmt()
         match(lookahead);
         expression();
         match(';');
-
     }else if (lookahead != '='){
         printf("Syntax Error: missing '=' in line %d.\n", lineNumber);
         exit(0);
     }
+    
 }
 
 

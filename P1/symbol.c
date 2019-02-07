@@ -87,7 +87,7 @@ bool isRowExist(Table currentTable, Row newRow)
 
    while(currentRow != NULL)
    {
-       if(currentRow->value == newRow->value)
+       if(strcmp(currentRow->value,newRow->value) == 0)
        {
            return true; //value already exist in the table
        }
