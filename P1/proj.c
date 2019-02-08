@@ -22,13 +22,12 @@ Description: this file contains logic for this project
 /*
 * declear values
 */
-int lookahead;
+int lookahead = ID;
 FILE *fp;
 int pos = 0;
 int lineNumber = 0;
 Table symboltable;
 Row newRow;
-int id;
 char c;
 char* word;
 char *number;
@@ -38,16 +37,22 @@ void runProgram()
     symboltable = createTable(NULL, NULL, 0);
     fp = fopen("test.txt", "r");
 
-    //insertRow(symboltable, pos,"begin", BEGIN);
-    //pos++;
-    lookahead = ID;
-
     while(fp != NULL)
     {
-        assignStmt();
+        
+        while(lexanAnalyzer() != '=')
+        {
+            lexanAnalyzer();
+        }
+        if(lexanAnalyzer() == '=')
+        {
+            assignStmt();
+        }
     }
 
     fclose(fp);
+    free(newRow);
+    free(symboltable);
 
 }
 
@@ -75,6 +80,7 @@ int lexanAnalyzer(){
         }else if (c == '\n') //if c is a new line, increase line number 
         {
             lineNumber++;
+            
 
         }else if(isdigit(c)) //if c is a digit
         {
@@ -92,7 +98,7 @@ int lexanAnalyzer(){
             word = malloc(50);
             getWord(c,word);
 
-            //printf("Word: %s\n", word);
+            int id = ID;
            
             if(strcmp(word,"begin") == 0)
             {
@@ -102,20 +108,21 @@ int lexanAnalyzer(){
             {
                 id = END;
                 
-            }else{
-            
-                id = ID;
             }
+            
+            printf("\nWord: %s, Id: %d ", word, id);
+            newRow = createRow(pos, word, id, NULL);
+            //insertRow(symboltable, pos, word, id);
+            //pos++;
 
-            //create the row 
-            newRow = createRow(pos,word,id,NULL);
-
+            
             //check if the row exist 
-            if(!isRowExist(symboltable, newRow))
+            if(!isValueExist(symboltable, newRow) == 1)
             {
+                printf("Row does not exist \n");
                 insertRow(symboltable, pos, word, id);
                 pos++;
-                freeRow(newRow);//free the row after insert 
+                //freeRow(newRow);//free the row after insert
 
             }else if(strcmp(word,"begin"))
             {
@@ -129,12 +136,17 @@ int lexanAnalyzer(){
             free(word);
             return ID;
 
-        }else if(c == EOF)//end of the file
+        }else if(c == EOF)//end of the file, should end with "end"
         {
-            displayTable(symboltable);
+            newRow = createRow(pos, "end", END, NULL);
+            
+            if(!isValueExist(symboltable, newRow))
+            {
+                printf("Missing identifer 'end' in the file\n");
+                exit(0);
+            }
 
         }else{
-            //lookahead = c;
             return c;
         }
      }
@@ -153,9 +165,10 @@ char *getWord(char c, char *word)
         c = fgetc(fp);
     }
 
-    if(c != '=' && c != '(' && c != ')' && c != '-' && c!= '*' && c!= '/' & c!= '+' && (!isalpha(c)) && (!isalnum(c)) && c != '\n' && c != ' ' && c != '\t')
+    if(strcmp(word, "end") == 0)
     {
-        printf("Syntax Error: Invalided Identifer '%s' in line %d!\n", word,lineNumber);
+        insertRow(symboltable, pos+1, word,END);
+        displayTable(symboltable);
         exit(0);
     }
 
@@ -261,7 +274,7 @@ void assignStmt()
 {
     match(ID);
 
-    if(lookahead == '=' )
+    if(lookahead == '=' || lookahead == ID)
     {
         match(lookahead);
         expression();
