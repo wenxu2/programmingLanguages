@@ -51,24 +51,17 @@ Table createTable(Row head, Row tail, int size){
 
 }
 
-void insertRow(Table currentTable, int pos, char *value, int type)
+void insertRow(Table currentTable, Row newRow)
 {
-    Row newRow = createRow(pos, value, type, NULL);
-
-    if(currentTable->head == NULL)
+    if(currentTable->tail == NULL)
     {
-        currentTable->head = newRow;
         currentTable->tail = newRow;
-        
-        printf("tail value: %s\n", newRow->value);
-
-        return;
     }
-    
-    setNextRow(currentTable->tail, newRow);
-    currentTable->tail = newRow;
+
+    setNextRow(newRow, currentTable->head);
+    currentTable->head = newRow;
     currentTable->size += 1;
-    printf("tail value: %s\n", newRow->value);
+
 }
 
 void displayTable(Table currentTable){
@@ -84,22 +77,24 @@ void displayTable(Table currentTable){
 
 }
 
-bool isValueExist(Table currentTable, Row newRow)
+bool isValueExist(Table currentTable, Row newRow, bool a)
 {
    Row currentRow = currentTable->head;
+   a = false;
 
    while(currentRow != NULL)
    {
        if(strcmp(currentRow->value, newRow->value) == 0)
        {
-           return true; //value already exist in the table
+           a = true;
+           return a; //value already exist in the table
        }
-
+       
        currentRow = getNextRow(currentRow);
        
    }
 
-    return false; //value does not exist 
+   return a; //value does not exist 
 }
 
 //free the row 

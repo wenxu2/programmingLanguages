@@ -31,15 +31,18 @@ Row newRow;
 char c;
 char* word;
 char *number;
+bool a = false;
 
 void runProgram()
 {
     symboltable = createTable(NULL, NULL, 0);
     fp = fopen("test.txt", "r");
 
+    c = fgetc(fp);
+
     while(fp != NULL)
     {
-        
+        checkEnding(c);
         while(lexanAnalyzer() != '=')
         {
             lexanAnalyzer();
@@ -67,7 +70,7 @@ int lexanAnalyzer(){
             char *line = malloc(10000);
             getComment(c,line);
             lineNumber++;
-            free(line);
+            line = NULL;
         }
         else if(c == '\n'){
             lineNumber++;
@@ -110,20 +113,25 @@ int lexanAnalyzer(){
                 
             }
             
-            printf("\nWord: %s, Id: %d ", word, id);
+            //printf("\nWord: %s, Id: %d ", word, id);
             newRow = createRow(pos, word, id, NULL);
-            //insertRow(symboltable, pos, word, id);
-            //pos++;
+            isValueExist(symboltable, newRow, a);
 
-            
             //check if the row exist 
-            if(!isValueExist(symboltable, newRow) == 1)
+            if(a == false)
             {
-                printf("Row does not exist \n");
-                insertRow(symboltable, pos, word, id);
-                pos++;
-                //freeRow(newRow);//free the row after insert
+                insertRow(symboltable, newRow);
 
+                if(pos == 0 && (strcmp(word, "begin") != 0))
+                {
+                    printf("Missing identifer 'begin' in the file\n");
+                    exit(0);
+                
+                }
+
+                pos++;
+                word = NULL;
+                
             }else if(strcmp(word,"begin"))
             {
                 return BEGIN;
@@ -138,12 +146,16 @@ int lexanAnalyzer(){
 
         }else if(c == EOF)//end of the file, should end with "end"
         {
+            //displayTable(symboltable);
+            a = false;
             newRow = createRow(pos, "end", END, NULL);
-            
-            if(!isValueExist(symboltable, newRow))
+            isValueExist(symboltable, newRow,a);
+            if(a == false)
             {
                 printf("Missing identifer 'end' in the file\n");
                 exit(0);
+            }else{
+                displayTable(symboltable);
             }
 
         }else{
@@ -158,16 +170,31 @@ int lexanAnalyzer(){
 */
 char *getWord(char c, char *word)
 {
+    char *line = malloc(10000);
+    //getComment(c,line);
+    //checkEnding(c,line);
+    //line = NULL;
+
     int i = 0;
     while(isalpha(c) || c == '_' || isalnum(c))
     {
         word[i++] = c;
         c = fgetc(fp);
+
+        if(c == '(')
+        {
+            if(isalpha(word[i-1]))
+            {
+                printf("Syntax Error: missing '=' in line %d.\n", lineNumber);
+                exit(0);
+            }
+        }
     }
 
     if(strcmp(word, "end") == 0)
     {
-        insertRow(symboltable, pos+1, word,END);
+        newRow = createRow(pos, "end", END, NULL);
+        insertRow(symboltable, newRow);
         displayTable(symboltable);
         exit(0);
     }
@@ -185,8 +212,10 @@ void getNumber(char c, char *number)
     int i = 0;
     while(isnumber(c) || c == '.')
     {
+        
         number[i++] = c;
         c = fgetc(fp);
+        
     }
 
     number[i] = '\0';
@@ -209,7 +238,6 @@ void getComment(char c, char *line)
 
     line[i] = '\0';
     ungetc(c,fp);    
-    //printf("%s\n",line);
 }
 
 /*
@@ -288,6 +316,30 @@ void assignStmt()
     
 }
 
+void checkEnding(char c){
+    
+    char *checkline = malloc(10000);
+    int i = 0;
+    while(c != '\n')
+    {
+        checkline[i++] = c;
+        c = fgetc(fp);
+    }
+
+    checkline[i] = '\0';
+    ungetc(c,fp);
+
+    if(checkline[i-1] != ';' && checkline[i-1] != 'n' && checkline[i-1] != 'd' && checkline[0] != '~')
+    {
+        
+        printf("Syntax Error: missing ';' in line %d.\n", lineNumber);
+        exit(0);
+        
+    }
+    
+    checkline = NULL;
+   
+}
 
 
 

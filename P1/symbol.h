@@ -16,11 +16,11 @@ typedef struct TABLE *Table;
 Table createTable(Row head, Row tail, int size);
 
 //inseart value
-void insertRow(Table currentTable, int pos, char *value, int type);
+void insertRow(Table currentTable, Row newRow);
 
 void displayTable(Table currentTable);
 
-bool isValueExist(Table currentTable, Row newRow);
+bool isValueExist(Table currentTable, Row newRow, bool a);
 
 //free the row
 void freeRow(Row currentRow);

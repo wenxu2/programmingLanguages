@@ -32,4 +32,10 @@ void getNumber(char c, char *number);
 
 void runProgram();
 
+bool valueIdentiferCheck(char *word);
+
+bool numberCheck(char *number);
+
+void checkEnding(char c);
+
 #endif
