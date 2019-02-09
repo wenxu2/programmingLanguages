@@ -43,10 +43,7 @@ void runProgram()
     while(fp != NULL)
     {
         checkEnding(c);
-        while(lexanAnalyzer() != '=')
-        {
-            lexanAnalyzer();
-        }
+        lexanAnalyzer();
         if(lexanAnalyzer() == '=')
         {
             assignStmt();
@@ -113,14 +110,13 @@ int lexanAnalyzer(){
                 
             }
             
-            //printf("\nWord: %s, Id: %d ", word, id);
             newRow = createRow(pos, word, id, NULL);
             isValueExist(symboltable, newRow, a);
 
             //check if the row exist 
             if(a == false)
             {
-                insertRow(symboltable, newRow);
+                insertRow(symboltable, newRow); //insert into the table
 
                 if(pos == 0 && (strcmp(word, "begin") != 0))
                 {
@@ -146,7 +142,6 @@ int lexanAnalyzer(){
 
         }else if(c == EOF)//end of the file, should end with "end"
         {
-            //displayTable(symboltable);
             a = false;
             newRow = createRow(pos, "end", END, NULL);
             isValueExist(symboltable, newRow,a);
@@ -155,6 +150,8 @@ int lexanAnalyzer(){
                 printf("Missing identifer 'end' in the file\n");
                 exit(0);
             }else{
+
+                //display the table
                 displayTable(symboltable);
             }
 
@@ -170,11 +167,6 @@ int lexanAnalyzer(){
 */
 char *getWord(char c, char *word)
 {
-    char *line = malloc(10000);
-    //getComment(c,line);
-    //checkEnding(c,line);
-    //line = NULL;
-
     int i = 0;
     while(isalpha(c) || c == '_' || isalnum(c))
     {
@@ -214,8 +206,7 @@ void getNumber(char c, char *number)
     {
         
         number[i++] = c;
-        c = fgetc(fp);
-        
+        c = fgetc(fp);  
     }
 
     number[i] = '\0';
@@ -249,9 +240,9 @@ void match(int t)
     {
         lookahead = lexanAnalyzer();
         displayTable(symboltable);
-
+        
     }else{
-        printf("match - Syntax Error: check line %d.\n",lineNumber);//need add line number 
+        printf("Syntax Error: check line %d.\n",lineNumber);//need add line number 
         exit(0);
     }
 }
@@ -273,7 +264,7 @@ void factor(){
         match(')');
 
     }else{
-        printf("factor - Syntax Error: check line %d.\n",lineNumber);
+        printf("Syntax Error: check line %d.\n",lineNumber);
         exit(0);
     }
 
@@ -304,6 +295,7 @@ void assignStmt()
 
     if(lookahead == '=' || lookahead == ID)
     {
+        //printf("dhdhhd\n");
         match(lookahead);
         expression();
         match(';');
@@ -316,6 +308,9 @@ void assignStmt()
     
 }
 
+/*
+* check if the line end with ';'
+*/
 void checkEnding(char c){
     
     char *checkline = malloc(10000);
