@@ -48,7 +48,7 @@ void runProgram()
         }
 
     }
-
+    
     fclose(fp);
     free(newRow);
     free(symboltable);
@@ -98,6 +98,8 @@ int lexanAnalyzer(){
             word = malloc(100);
             getWord(c,word);
             
+            //printf("Word: %s\n",word);
+            
             int id = ID;
            
             if(strcmp(word,"begin") == 0)
@@ -119,8 +121,6 @@ int lexanAnalyzer(){
             {
                 insertRow(symboltable, newRow); //insert into the table
                 
-                //printf("word : %s\n",word);
-                
                 if(pos == 0 && (strcmp(word, "begin") != 0))
                 {
                     printf("Missing identifer 'begin' in the file\n");
@@ -130,7 +130,6 @@ int lexanAnalyzer(){
 
                 pos++;
                 word = NULL;
-                lineNumber++;
                 
             }else if(strcmp(word,"begin"))
             {
@@ -144,20 +143,15 @@ int lexanAnalyzer(){
             free(word);
             return ID;
 
-        }else if(c == EOF)//end of the file, should end with "end"
+        }else if(c == EOF) //end of the file, should end with "end"
         {
-
             newRow = createRow(pos, "end", END, NULL);
             if(!isValueExist(symboltable, newRow))
             {
                 printf("Missing identifer 'end' in the file\n");
                 exit(0);
-            }else{
-
-                //display the table
-                displayTable(symboltable);
             }
-
+            
         }else{
             return c;
         }
@@ -181,7 +175,7 @@ char *getWord(char c, char *word)
         {
             if(isalpha(word[i-1]))
             {
-                printf("Syntax Error: missing '=' in line %d.\n", lineNumber);
+                printf("Syntax Error in line %d.\n", lineNumber);
                 exit(0);
             }
         }
@@ -244,7 +238,6 @@ void match(int t)
     if(lookahead == t)
     {
         lookahead = lexanAnalyzer();
-        displayTable(symboltable);
         
     }else{
         printf("Syntax Error: check line %d.\n",lineNumber);//need add line number 
@@ -269,7 +262,7 @@ void factor(){
         match(')');
 
     }else{
-        printf("Syntax Error: check line %d.\n",lineNumber);
+        printf("Syntax Error: check line %d.\n",lineNumber-1);
         exit(0);
     }
 
@@ -304,9 +297,9 @@ void assignStmt()
         expression();
         match(';');
 
-    }else if (lookahead != '='){
-
-        printf("Syntax Error: missing '=' in line %d.\n", lineNumber);
+    }else{
+        
+        printf("Syntax Error: check line %d.\n",lineNumber-1);
         exit(0);
     }
     

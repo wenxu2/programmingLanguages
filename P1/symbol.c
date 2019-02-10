@@ -85,7 +85,6 @@ bool isValueExist(Table currentTable, Row newRow)
    {
        if(strcmp(currentRow->value, newRow->value) == 0)
        {
-           //printf("Word exist %s\n",newRow->value);
            return true; //value already exist in the table
        }
        
