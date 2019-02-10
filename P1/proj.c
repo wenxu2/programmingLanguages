@@ -27,10 +27,15 @@ FILE *fp;
 int pos = 0;
 int lineNumber = 0;
 Table symboltable;
+char *signtable;
 Row newRow;
 char* word;
 char *number;
 bool a = false;
+int numberofleft = 0;
+int numberofright = 0;
+int numberofequal = 0;
+int numberofclose = 0;
 
 void runProgram()
 {
@@ -39,6 +44,7 @@ void runProgram()
     
     while(fp != NULL)
     {
+        //assignsign(lexanAnalyzer());
         lexanAnalyzer();
         
         if(lexanAnalyzer() == '=')
@@ -47,6 +53,7 @@ void runProgram()
         }
 
     }
+
     
     fclose(fp);
     free(newRow);
@@ -58,7 +65,6 @@ int lexanAnalyzer(){
 
     while(true)
     {
-        printf("lookhead: %d\n", lookahead);
         char c = fgetc(fp);
     
         if(c == '~')
@@ -150,6 +156,7 @@ int lexanAnalyzer(){
             }
             
         }else{
+            assignsign(c);
             return c;
         }
      }
@@ -182,8 +189,15 @@ char *getWord(char c, char *word)
     {
         newRow = createRow(pos, "end", END, NULL);
         insertRow(symboltable, newRow);
-        displayTable(symboltable);
-        exit(0);
+
+        if(numberofleft != numberofright || numberofclose != numberofequal)
+        {
+            printf("Syntax Error\n");
+            exit(0);
+        }else{
+             displayTable(symboltable);
+             exit(0);
+        }
     }
 
     word[i] = '\0';
@@ -301,6 +315,44 @@ void assignStmt()
         exit(0);
     }
     
+}
+
+/*
+* assign signs in the txt files
+*/
+void assignsign(char ch)
+{
+    int i =0;
+    signtable = malloc(100000);
+    if(!isalpha(ch) && !isdigit(ch))
+    {
+        signtable[i++] = ch;
+    }
+
+    int j = 0;
+    for(j = 0; j< i; j++)
+    {
+        if(signtable[j] == '(')
+        {
+            numberofleft += 1;
+        }
+
+        if(signtable[j] == ')')
+        {
+            numberofright += 1;
+        }
+
+        if(signtable[j] == '=')
+        {
+            numberofequal +=1;
+        }
+
+        if(signtable[j] == ';')
+        {
+            numberofclose += 1;
+        }
+    }
+
 }
 
 

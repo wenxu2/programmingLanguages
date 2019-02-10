@@ -36,5 +36,6 @@ bool valueIdentiferCheck(char *word);
 
 bool numberCheck(char *number);
 
+void assignsign(char ch);
 
 #endif
