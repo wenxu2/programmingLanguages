@@ -11,8 +11,14 @@ Description: main file to run the project
 #include <ctype.h>
 #include "symbol.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    runProgram();//run the program 
+    //get user input for file name
+    char *filename1 = argv[1];
+
+    printf("\n\n%s\n", filename1);
+    
+    runProgram(filename1);//run the program with file 1
+
     return 0;
 }

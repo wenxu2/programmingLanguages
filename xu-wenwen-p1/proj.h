@@ -9,6 +9,9 @@ Description: headfile to hold all function to be used in this project
 #ifndef PROJ_H
 #define PROJ_H
 
+//run the program
+void runProgram(char *filename);
+
 //lexanAnalyzer 
 int lexanAnalyzer();
 
@@ -29,8 +32,6 @@ char *getWord(char c, char *word);
 void getComment(char c, char *line);
 
 void getNumber(char c, char *number);
-
-void runProgram();
 
 bool valueIdentiferCheck(char *word);
 

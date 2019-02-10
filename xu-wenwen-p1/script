@@ -1,0 +1,1 @@
+Running " make test main.c && ./test legal1.txt && ./test legal2.txt && ./test legal3.txt && ./test legal4.txt && ./test illegal1.txt && ./test illegal2.txt && ./test illegal3.txt && ./test illegal4.txt" in terminal. 

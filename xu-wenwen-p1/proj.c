@@ -37,13 +37,19 @@ int numberofright = 0;
 int numberofequal = 0;
 int numberofclose = 0;
 
-void runProgram()
+void runProgram(char *filename)
 {
+    //check filename
+    if(filename == NULL)
+    {
+        printf("Make sure you had the filename after the command './test <filename>' or file is empty.\n");
+    }
+
     /*
     * create table and open file
     * */
     symboltable = createTable(NULL, NULL, 0);
-    fp = fopen("test.txt", "r");
+    fp = fopen(filename, "r");
     
     while(fp != NULL)
     {
@@ -192,6 +198,22 @@ char *getWord(char c, char *word)
                 exit(0);
             }
         }
+
+        if(c == '_')
+        {
+            if(word[i-1] == '_')
+            {
+                printf("Invalid Identifer in line %d.\n", lineNumber);
+                exit(0);
+            }
+        }
+    }
+
+    //check the end of the word
+    if(!isalnum(word[i-1]) && !isalpha(word[i]))
+    {
+        printf("Invalid Identifer '%s' in line %d.\n", word, lineNumber);
+        exit(0);
     }
 
     if(strcmp(word, "end") == 0)
@@ -230,6 +252,12 @@ void getNumber(char c, char *number)
 
     number[i] = '\0';
     ungetc(c,fp);
+
+    if(number[i-1] == '.')
+    {
+        printf("Invalid number '%s' in line %d.\n",number,lineNumber);
+        exit(0);
+    }
     
 }
 
