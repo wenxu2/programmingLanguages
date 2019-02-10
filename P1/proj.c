@@ -28,7 +28,6 @@ int pos = 0;
 int lineNumber = 0;
 Table symboltable;
 Row newRow;
-char c;
 char* word;
 char *number;
 bool a = false;
@@ -59,7 +58,8 @@ int lexanAnalyzer(){
 
     while(true)
     {
-        c = fgetc(fp);
+        printf("lookhead: %d\n", lookahead);
+        char c = fgetc(fp);
     
         if(c == '~')
         {
@@ -67,8 +67,7 @@ int lexanAnalyzer(){
             getComment(c,line);
             lineNumber++;
             line = NULL;
-        }
-        else if(c == '\n'){
+        }else if(c == '\n'){
             lineNumber++;
         }
         else if(c == ' ' || c == '\t') //if c is a space or tab
@@ -113,8 +112,6 @@ int lexanAnalyzer(){
             }
             
             newRow = createRow(pos, word, id, NULL);
-            
-            
             
             //check if the row does not exist
             if(!isValueExist(symboltable, newRow))
@@ -247,6 +244,7 @@ void match(int t)
 
 void factor(){
 
+    lexanAnalyzer();
     if(lookahead == ID)
     {
         match(ID);

@@ -1,3 +1,10 @@
+/*
+ File name: symbol.h
+ Author: Wenwen Xu
+ Project: Project 1
+ Description: this file contains function for the symbol
+ */
+
 #include <stdbool.h>
 #ifndef SYMBOL_H
 #define SYMBOL_H

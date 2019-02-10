@@ -1,3 +1,10 @@
+/*
+ File name: symbol.c
+ Author: Wenwen Xu
+ Project: Project 1
+ Description: this file contains logic the symbol table
+ */
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
