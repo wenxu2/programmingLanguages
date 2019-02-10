@@ -39,12 +39,14 @@ int numberofclose = 0;
 
 void runProgram()
 {
+    /*
+    * create table and open file
+    * */
     symboltable = createTable(NULL, NULL, 0);
     fp = fopen("test.txt", "r");
     
     while(fp != NULL)
     {
-        //assignsign(lexanAnalyzer());
         lexanAnalyzer();
         
         if(lexanAnalyzer() == '=')
@@ -54,10 +56,17 @@ void runProgram()
 
     }
 
-    
+    //close files
     fclose(fp);
+
+    /*
+    * free memory
+    */
     free(newRow);
     free(symboltable);
+    free(signtable);
+    free(word);
+    free(number);
 
 }
 
@@ -323,7 +332,7 @@ void assignStmt()
 void assignsign(char ch)
 {
     int i =0;
-    signtable = malloc(100000);
+    signtable = malloc(1000);
     if(!isalpha(ch) && !isdigit(ch))
     {
         signtable[i++] = ch;
