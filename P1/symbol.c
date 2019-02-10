@@ -77,24 +77,23 @@ void displayTable(Table currentTable){
 
 }
 
-bool isValueExist(Table currentTable, Row newRow, bool a)
+bool isValueExist(Table currentTable, Row newRow)
 {
    Row currentRow = currentTable->head;
-   a = false;
 
    while(currentRow != NULL)
    {
        if(strcmp(currentRow->value, newRow->value) == 0)
        {
-           a = true;
-           return a; //value already exist in the table
+           //printf("Word exist %s\n",newRow->value);
+           return true; //value already exist in the table
        }
        
        currentRow = getNextRow(currentRow);
        
    }
 
-   return a; //value does not exist 
+   return false; //value does not exist
 }
 
 //free the row 

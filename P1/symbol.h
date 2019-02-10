@@ -20,7 +20,7 @@ void insertRow(Table currentTable, Row newRow);
 
 void displayTable(Table currentTable);
 
-bool isValueExist(Table currentTable, Row newRow, bool a);
+bool isValueExist(Table currentTable, Row newRow);
 
 //free the row
 void freeRow(Row currentRow);
