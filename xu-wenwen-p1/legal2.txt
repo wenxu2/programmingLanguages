@@ -1,4 +1,0 @@
-~a typical, minimal legal program
-begin
-  qwert=((6 - abcd)*(a + b));
-end

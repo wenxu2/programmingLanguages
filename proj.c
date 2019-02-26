@@ -243,7 +243,7 @@ char *getWord(char c, char *word)
 void getNumber(char c, char *number)
 {
     int i = 0;
-    while(isnumber(c) || c == '.')
+    while(isdigit(c) || c == '.')
     {
         
         number[i++] = c;
