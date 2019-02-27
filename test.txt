@@ -1,8 +1,6 @@
 ~a typical, minimal legal program
 begin
   int z, b;
-  int z;
-  int y;
-  x = (y + z) * (z - asdf_9);
-  z = b - 5;
+  int x;
+  int c;
 end

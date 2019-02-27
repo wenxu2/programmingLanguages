@@ -25,7 +25,7 @@ Description: this file contains logic for this project
 int lookahead = ID;
 FILE *fp;
 int pos = 0;
-int lineNumber = 0;
+int lineNumber = 1;
 Table symboltable;
 char *signtable;
 Row newRow;
@@ -36,6 +36,8 @@ int numberofleft = 0;
 int numberofright = 0;
 int numberofequal = 0;
 int numberofclose = 0;
+bool is_END_exist = false;
+bool is_BEGIN_exist = false;
 
 void runProgram()
 {
@@ -112,24 +114,42 @@ int lexanAnalyzer(){
             //get identiferier into value
             word = malloc(100);
             getWord(c,word);
-            //printf("Word: %s\n", word);
             
             if(strcmp(word,"int") == 0 ){
-
-                //getWord(c, word);
                 c = fgetc(fp);
                 insertValue(c);
+
+            }else if(strcmp(word,"begin"))
+            {
+                is_BEGIN_exist = true;
+                return BEGIN;
+
+            }else if(strcmp(word,"end"))
+            {
+                is_END_exist = true;
+                return END;
+            }else if(!isValueExist(symboltable, word)){
+
+                printf("Word have not been decleared!\n");
             }
-            
-            displayTable(symboltable);
+
+            printf("\n");
+            free(word);
+            return ID;
             return ID;
 
         }else if(c == EOF) //end of the file, should end with "end"
         {
-            
+            if(!is_END_exist){
+                printf("ERROR! Missing identifer 'END' in you code\n");
+                exit(0);
+            }else{
+                displayTable(symboltable);
+                exit(0);
+            }
             
         }else{
-            assignsign(c);
+           
             return c;
         }
      }
@@ -152,8 +172,6 @@ char *getWord(char c, char *word)
     word[i] = '\0';
     ungetc(c,fp);
 
-    //printf("%s\n", word);
-  
     return word;
 }
 
@@ -170,7 +188,7 @@ void insertValue(char c){
         c = fgetc(fp);
     }
     
-    printf("%s\n",w);
+    //printf("%s\n",w);
 
     char spliter = ',';
     char *token = strtok(w,&spliter);
@@ -179,9 +197,8 @@ void insertValue(char c){
     while(token != NULL){
         
         newRow = createRow(pos,token, ID,"int",NULL);
-        //printf("token: %s\n",token);
 
-        if(!isValueExist(symboltable,newRow)){
+        if(!isValueExist(symboltable,token)){
             insertRow(symboltable, newRow);
             pos++;
 
@@ -191,7 +208,6 @@ void insertValue(char c){
         }
 
         token = strtok(NULL,&spliter);
-
     }
 
 }
@@ -225,7 +241,6 @@ void getNumber(char c, char *number)
 */
 void getComment(char c, char *line)
 {
-
     int i = 0;
     while(c != '\n')
     {
@@ -247,7 +262,7 @@ void match(int t)
         lookahead = lexanAnalyzer();
         
     }else{
-        printf("Syntax Error: check line %d.\n",lineNumber);//need add line number 
+        printf("test Syntax Error: check line %d.\n",lineNumber);//need add line number 
         exit(0);
     }
 }
@@ -270,7 +285,7 @@ void factor(){
         match(')');
 
     }else{
-        printf("Syntax Error: check line %d.\n",lineNumber-1);
+        printf("factor : Syntax Error: check line %d.\n",lineNumber-1);
         exit(0);
     }
 
@@ -307,7 +322,7 @@ void assignStmt()
 
     }else{
         
-        printf("Syntax Error: check line %d.\n",lineNumber-1);
+        printf("assign Syntax Error: check line %d.\n",lineNumber-1);
         exit(0);
     }
     

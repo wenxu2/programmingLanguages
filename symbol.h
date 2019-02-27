@@ -27,7 +27,7 @@ void insertRow(Table currentTable, Row newRow);
 
 void displayTable(Table currentTable);
 
-bool isValueExist(Table currentTable, Row newRow);
+bool isValueExist(Table currentTable, char *value);
 
 //free the row
 void freeRow(Row currentRow);

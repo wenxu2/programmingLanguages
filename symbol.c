@@ -85,24 +85,22 @@ void displayTable(Table currentTable){
 
 }
 
-bool isValueExist(Table currentTable, Row newRow)
+bool isValueExist(Table currentTable, char *value)
 {
    Row currentRow = currentTable->head;
 
    while(currentRow != NULL)
    {
-       if(strcmp(currentRow->value, newRow->value) == 0)
+       if(strcmp(currentRow->value, value) == 0)
        {
-           if(strcmp(currentRow->decleartype, "int") == 0)
-           {
-                return true; //value already exist in the table
-           }
+            //printf("return true\n");
+            return true; //value already exist in the table
        }
        
        currentRow = getNextRow(currentRow);
-       
    }
 
+   //printf("return false\n");
    return false; //value does not exist
 }
 
