@@ -37,19 +37,13 @@ int numberofright = 0;
 int numberofequal = 0;
 int numberofclose = 0;
 
-void runProgram(char *filename)
+void runProgram()
 {
-    //check filename
-    if(filename == NULL)
-    {
-        printf("Make sure you had the filename after the command './test <filename>' or file is empty.\n");
-    }
-
     /*
     * create table and open file
     * */
-    symboltable = createTable(NULL, NULL, 0);
-    fp = fopen(filename, "r");
+    symboltable = createTable(NULL, NULL,0);
+    fp = fopen("test.txt", "r");
     
     while(fp != NULL)
     {
@@ -88,6 +82,7 @@ int lexanAnalyzer(){
             getComment(c,line);
             lineNumber++;
             line = NULL;
+            
         }else if(c == '\n'){
             lineNumber++;
         }
@@ -117,58 +112,21 @@ int lexanAnalyzer(){
             //get identiferier into value
             word = malloc(100);
             getWord(c,word);
+            //printf("Word: %s\n", word);
             
-            //printf("Word: %s\n",word);
-            
-            int id = ID;
-           
-            if(strcmp(word,"begin") == 0)
-            {
-                id = BEGIN;
+            if(strcmp(word,"int") == 0 ){
 
-            }else if(strcmp(word,"end") == 0)
-            {
-                id = END;
-                
+                //getWord(c, word);
+                c = fgetc(fp);
+                insertValue(c);
             }
             
-            newRow = createRow(pos, word, id, NULL);
-            
-            //check if the row does not exist
-            if(!isValueExist(symboltable, newRow))
-            {
-                insertRow(symboltable, newRow); //insert into the table
-                
-                if(pos == 0 && (strcmp(word, "begin") != 0))
-                {
-                    printf("Missing identifer 'begin' in the file\n");
-                    exit(0);
-                
-                }
-
-                pos++;
-                word = NULL;
-                
-            }else if(strcmp(word,"begin"))
-            {
-                return BEGIN;
-
-            }else if(strcmp(word,"end"))
-            {
-                return END;
-            }
-
-            free(word);
+            displayTable(symboltable);
             return ID;
 
         }else if(c == EOF) //end of the file, should end with "end"
         {
-            newRow = createRow(pos, "end", END, NULL);
-            if(!isValueExist(symboltable, newRow))
-            {
-                printf("Missing identifer 'end' in the file\n");
-                exit(0);
-            }
+            
             
         }else{
             assignsign(c);
@@ -189,52 +147,53 @@ char *getWord(char c, char *word)
     {
         word[i++] = c;
         c = fgetc(fp);
-
-        if(c == '(')
-        {
-            if(isalpha(word[i-1]))
-            {
-                printf("Syntax Error in line %d.\n", lineNumber);
-                exit(0);
-            }
-        }
-
-        if(c == '_')
-        {
-            if(word[i-1] == '_')
-            {
-                printf("Invalid Identifer in line %d.\n", lineNumber);
-                exit(0);
-            }
-        }
-    }
-
-    //check the end of the word
-    if(!isalnum(word[i-1]) && !isalpha(word[i]))
-    {
-        printf("Invalid Identifer '%s' in line %d.\n", word, lineNumber);
-        exit(0);
-    }
-
-    if(strcmp(word, "end") == 0)
-    {
-        newRow = createRow(pos, "end", END, NULL);
-        insertRow(symboltable, newRow);
-
-        if(numberofleft != numberofright || numberofclose != numberofequal)
-        {
-            printf("Syntax Error\n");
-            exit(0);
-        }else{
-             displayTable(symboltable);
-             exit(0);
-        }
     }
 
     word[i] = '\0';
     ungetc(c,fp);
-    
+
+    //printf("%s\n", word);
+  
     return word;
+}
+
+/*
+* get value and insert to table
+*/
+void insertValue(char c){
+
+    char *w = malloc(200);
+    int i = 0;
+    while( c != ';')
+    { 
+        w[i++] = c;
+        c = fgetc(fp);
+    }
+    
+    printf("%s\n",w);
+
+    char spliter = ',';
+    char *token = strtok(w,&spliter);
+
+    // createRow(int pos, char *value, int type,char *decleartype, Row next)
+    while(token != NULL){
+        
+        newRow = createRow(pos,token, ID,"int",NULL);
+        //printf("token: %s\n",token);
+
+        if(!isValueExist(symboltable,newRow)){
+            insertRow(symboltable, newRow);
+            pos++;
+
+        }else{
+            printf("ERROR! Value '%s' already declear!\n", token);
+            exit(0);
+        }
+
+        token = strtok(NULL,&spliter);
+
+    }
+
 }
 
 /*

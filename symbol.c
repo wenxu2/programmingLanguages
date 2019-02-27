@@ -13,19 +13,20 @@
 #include "symbol.h"
 
 struct ROW{
-
     int pos;
     char *value;
     int type;
+    char *decleartype;
     Row next;
 };
 
-Row createRow(int pos, char *value, int type, Row next){
+Row createRow(int pos, char *value, int type,char *decleartype, Row next){
 
     Row newRow = malloc(sizeof *newRow);
     newRow->pos = pos;
     newRow->value = value;
     newRow->type = type;
+    newRow->decleartype = decleartype;
     newRow->next = next;
 
     return newRow;
@@ -77,7 +78,7 @@ void displayTable(Table currentTable){
     
     while(currentRow != NULL)
     {
-        printf("%d %s % d \n", currentRow->pos, currentRow->value, currentRow->type);
+        printf("%d %s %s % d \n", currentRow->pos, currentRow->decleartype, currentRow->value, currentRow->type);
         currentRow = getNextRow(currentRow);
         
     }
@@ -92,7 +93,10 @@ bool isValueExist(Table currentTable, Row newRow)
    {
        if(strcmp(currentRow->value, newRow->value) == 0)
        {
-           return true; //value already exist in the table
+           if(strcmp(currentRow->decleartype, "int") == 0)
+           {
+                return true; //value already exist in the table
+           }
        }
        
        currentRow = getNextRow(currentRow);

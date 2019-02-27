@@ -10,7 +10,7 @@ Description: headfile to hold all function to be used in this project
 #define PROJ_H
 
 //run the program
-void runProgram(char *filename);
+void runProgram();
 
 //lexanAnalyzer 
 int lexanAnalyzer();
@@ -38,5 +38,7 @@ bool valueIdentiferCheck(char *word);
 bool numberCheck(char *number);
 
 void assignsign(char ch);
+
+void insertValue(char c);
 
 #endif

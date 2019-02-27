@@ -14,11 +14,11 @@ Description: main file to run the project
 int main(int argc, char* argv[])
 {
     //get user input for file name
-    char *filename1 = argv[1];
+   // char *filename1 = argv[1];
 
-    printf("\n\n%s\n", filename1);
+    //printf("\n\n%s\n", filename1);
     
-    runProgram(filename1);//run the program with file 1
+    runProgram();//run the program with file 1
 
     return 0;
 }

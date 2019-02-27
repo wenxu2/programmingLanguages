@@ -12,7 +12,7 @@
 
 //create a row
 typedef struct ROW *Row;
-Row createRow(int pos, char *value, int type, Row next);
+Row createRow(int pos, char *value, int type, char *decleartype, Row next);
 
 void setNextRow(Row currentRow, Row next);
 
