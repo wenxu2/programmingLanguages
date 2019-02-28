@@ -1,7 +1,7 @@
 /*
 File name: proj.h
 Author: Wenwen Xu
-Project: Project 1
+Project: Project 2
 Description: headfile to hold all function to be used in this project
 */
 

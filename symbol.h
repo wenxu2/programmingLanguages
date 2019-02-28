@@ -1,7 +1,7 @@
 /*
  File name: symbol.h
  Author: Wenwen Xu
- Project: Project 1
+ Project: Project 2
  Description: this file contains function for the symbol
  */
 

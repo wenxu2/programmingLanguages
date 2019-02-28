@@ -1,7 +1,7 @@
 /*
 File name: main.c
 Author: Wenwen Xu
-Project: Project 1
+Project: Project 2
 Description: main file to run the project 
 */
 

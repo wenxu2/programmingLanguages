@@ -4,7 +4,6 @@
 begin
   int ghgghg, abc_edef;
   int b, qwerty, abcd;
-  ~fhdhfd
   int a, c; 
   qwerty=((6 - abcd));
   a = (b + c + a);

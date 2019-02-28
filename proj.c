@@ -1,7 +1,7 @@
 /*
 File name: proj.c
 Author: Wenwen Xu
-Project: Project 1
+Project: Project 2
 Description: this file contains logic for this project 
 */
 
@@ -137,6 +137,7 @@ int lexanAnalyzer(){
 
             }
 
+            /*if the word is "int", insert the after words to the table*/
             if(strcmp(word,"int")==0){
 
                 insertValue(c);
@@ -383,8 +384,6 @@ void assignStmt()
 {
      match(ID);
 
-    //lookahead = ID;
-
     printf("%d\n", lookahead);
 
     if(lookahead == '=' || lookahead == ID)
@@ -449,20 +448,15 @@ void output(char c){
     sentence[i] = '\0';
     ungetc(c,fp);  
 
-    //printf("%s\n",sentence);
     compiling(sentence);
 
 }
 
 void compiling(char *sentence){
-
-    char previouschar = '\0';
     char currentchar = '\0';
-    char lastchar = '\0';
     char* sign = malloc(40);
     int j = 0;
     int k = 0;
-    int o = 0;
 
     char *rzero= malloc(10);
     char *rtwo = malloc(10);
@@ -472,12 +466,12 @@ void compiling(char *sentence){
     char *charzero= malloc(10);
     char *charone = malloc(10);
  
-    for(int i = 1; sentence[i] !='\n'; i++){
+    int i = 0;
+    for(i = 1; sentence[i] !='\n'; i++){
         currentchar = sentence[i];
-        previouschar = sentence[i-1];
 
         if(currentchar == '('){
-            lastchar = previouschar;
+            //do nothing 
         }else{
             if(sentence[i] != '(' && sentence[i] != ')' && sentence[i] != '_'){
                 if(!isdigit(sentence[i])){
@@ -496,9 +490,6 @@ void compiling(char *sentence){
         }
 
     }
-
-    //printf("%s\n", sign);
-    //printf("%s\n", rzero);
 
     char spliter = '~';
     char *token = strtok(rzero,&spliter);
@@ -530,8 +521,6 @@ void compiling(char *sentence){
         }
         
         t++;
-        //printf("token: %s\n",token);
-        
         token = strtok(NULL,&spliter);
     }
 
@@ -539,8 +528,6 @@ void compiling(char *sentence){
         printf("R0 = R0 %s R1\n",sign);
         printf("******[%s,%s,%c]******\n",charzero,charone,sign[0]);
     }
-
-    //printf("total t: %d \n", t);
 
     if(t == 3){
         printf("R2 = %s\n", rtwo);
