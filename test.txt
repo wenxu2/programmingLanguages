@@ -1,6 +1,0 @@
-~a typical, minimal legal program
-begin
-  int z, b;
-  int x;
-  int c;
-end

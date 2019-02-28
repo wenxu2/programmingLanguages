@@ -1,0 +1,9 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~ This is a comment
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+begin
+  int abc_edef;
+  int b;
+  ~ghgghg = (abc_edef * b);
+  qwerty=((6 - abcd)+(a + z));
+end

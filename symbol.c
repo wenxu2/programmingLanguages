@@ -16,17 +16,15 @@ struct ROW{
     int pos;
     char *value;
     int type;
-    char *decleartype;
     Row next;
 };
 
-Row createRow(int pos, char *value, int type,char *decleartype, Row next){
+Row createRow(int pos, char *value, int type,Row next){
 
     Row newRow = malloc(sizeof *newRow);
     newRow->pos = pos;
     newRow->value = value;
     newRow->type = type;
-    newRow->decleartype = decleartype;
     newRow->next = next;
 
     return newRow;
@@ -78,7 +76,7 @@ void displayTable(Table currentTable){
     
     while(currentRow != NULL)
     {
-        printf("%d %s %s % d \n", currentRow->pos, currentRow->decleartype, currentRow->value, currentRow->type);
+        printf("%d %s %d \n", currentRow->pos, currentRow->value, currentRow->type);
         currentRow = getNextRow(currentRow);
         
     }
@@ -93,14 +91,14 @@ bool isValueExist(Table currentTable, char *value)
    {
        if(strcmp(currentRow->value, value) == 0)
        {
-            //printf("return true\n");
+            //printf("Value already exist in the table\n");
             return true; //value already exist in the table
        }
        
        currentRow = getNextRow(currentRow);
    }
 
-   //printf("return false\n");
+   //printf("Value does not exist in the table\n");
    return false; //value does not exist
 }
 

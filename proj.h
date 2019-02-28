@@ -10,13 +10,13 @@ Description: headfile to hold all function to be used in this project
 #define PROJ_H
 
 //run the program
-void runProgram();
+void runProgram(char *filename);
 
 //lexanAnalyzer 
 int lexanAnalyzer();
 
 //recursive descent parser
-void match(int t);
+int match(int t);
 
 void factor();
 
@@ -40,5 +40,9 @@ bool numberCheck(char *number);
 void assignsign(char ch);
 
 void insertValue(char c);
+
+void output(char c);
+
+void compiling(char *sentence);
 
 #endif
